@@ -1,0 +1,22 @@
+{
+    "name": "nobiiru/social-network",
+    "description": "small framework for social network",
+    "authors": [
+        {
+            "name": "Vladislav",
+            "email": "djvla64rus@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "vlucas/phpdotenv": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nobiiru\\": "app/"
+        },
+        "files": [
+            "app/Helpers.php"
+        ]
+    }
+}
