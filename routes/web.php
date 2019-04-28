@@ -1,31 +1,32 @@
 <?php
-$app->get('/','Nobiiru\Controller\MainController@index');
-$app->get('/404','Nobiiru\Controller\MainController@notFound');
+use Cattle\App;
+App::get('/','\Cattle\Controller\MainController@index');
+App::get('/404','\Cattle\Controller\MainController@notFound');
 
-$app->get('/profile','Nobiiru\Controller\ProfileController@index');
-$app->get('/friends','Nobiiru\Controller\FriendsController@index');
+App::get('/profile','\Cattle\Controller\ProfileController@index');
+App::get('/friends','\Cattle\Controller\FriendsController@index');
 
 
-$app->get('/messages/:user','Nobiiru\Controller\MessagesController@showMessages');
-$app->post('/messages/:user','Nobiiru\Controller\MessagesController@showMessagesPost');
-$app->get('/messages/','Nobiiru\Controller\MessagesController@index');
-//$app->post('/messages/','Nobiiru\Controller\MessagesController@showMessagesPost');
+App::get('/messages/:user','\Cattle\Controller\MessagesController@showMessages');
+App::post('/messages/:user','\Cattle\Controller\MessagesController@showMessagesPost');
+App::get('/messages/','\Cattle\Controller\MessagesController@index');
+//App::post('/messages/','\Cattle\Controller\MessagesController@showMessagesPost');
 
-$app->get('/signup','Nobiiru\Controller\MainController@signup');
-$app->post('/signup','Nobiiru\Controller\MainController@signupPost');
+App::get('/signup','\Cattle\Controller\MainController@signup');
+App::post('/signup','\Cattle\Controller\MainController@signupPost');
 
-$app->get('/login','Nobiiru\Controller\MainController@login');
-$app->post('/login','Nobiiru\Controller\MainController@loginPost');
+App::get('/login','\Cattle\Controller\MainController@login');
+App::post('/login','\Cattle\Controller\MainController@loginPost');
 
-$app->get('/users','Nobiiru\Controller\MembersController@index');
-$app->get('/add/:user', 'Nobiiru\Controller\MembersController@addFriend');
-$app->get('/remove/:user', 'Nobiiru\Controller\MembersController@removeFriend');
-$app->get('/id/:user', 'Nobiiru\Controller\MembersController@showProfile');
-$app->get('/id/', 'Nobiiru\Controller\MembersController@index');
+App::get('/users','\Cattle\Controller\MembersController@index');
+App::get('/add/:user', '\Cattle\Controller\MembersController@addFriend');
+App::get('/remove/:user', '\Cattle\Controller\MembersController@removeFriend');
+App::get('/id/:user', '\Cattle\Controller\MembersController@showProfile');
+App::get('/id/', '\Cattle\Controller\MembersController@index');
 
-$app->get('/logout','Nobiiru\Controller\MainController@logout');
+App::get('/logout','\Cattle\Controller\MainController@logout');
 
-$app->post('/api/text','Nobiiru\Controller\ProfileController@changeUserDescription');
-$app->post('/api/avatar','Nobiiru\Controller\ProfileController@uploadUserImage');
+App::post('/api/text','\Cattle\Controller\ProfileController@changeUserDescription');
+App::post('/api/avatar','\Cattle\Controller\ProfileController@uploadUserImage');
 
 

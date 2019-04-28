@@ -16,7 +16,6 @@ class MembersController
     {
         $this->view = new View();
 
-
         $userstr = ' (Guest)';
         if (isset($_SESSION['user'])) {
             $this->user = $_SESSION['user'];

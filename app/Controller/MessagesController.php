@@ -1,8 +1,8 @@
 <?php
 
-namespace Nobiiru\Controller;
+namespace Cattle\Controller;
 
-use Nobiiru\View;
+use Cattle\View;
 
 
 class MessagesController

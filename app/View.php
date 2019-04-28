@@ -1,6 +1,6 @@
 <?php
 
-namespace Nobiiru;
+namespace Cattle;
 
 
 class View {

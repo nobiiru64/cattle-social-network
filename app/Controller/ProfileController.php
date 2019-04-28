@@ -1,8 +1,10 @@
 <?php
 
-namespace Nobiiru\Controller;
+namespace Cattle\Controller;
 
-use Nobiiru\View;
+use Cattle\Controller;
+use Cattle\View;
+use Cattle\Model\Profile;
 
 
 class ProfileController
@@ -11,20 +13,45 @@ class ProfileController
     public $view;
     public $loggedin;
     public $user;
+    public $auth;
+
     public function __construct()
     {
         $this->view = new View();
+        $this->auth = \Cattle\App::auth();
+        if ($_SESSION) $this->user = $_SESSION['user'];
+
+        if ($_SESSION['user']) $this->loggedin = TRUE;
 
 
-        $userstr = ' (Guest)';
+    }
 
-        if (isset($_SESSION['user'])) {
-            $this->user = $_SESSION['user'];
-            $this->loggedin = TRUE;
-            $userstr = " ($this->user)";
+    public function index()
+    {
+        if (!$this->loggedin)
+            die();
+
+
+        if (!$profile = Profile::get($this->user)) {
+            $test = '';
         } else {
-            $this->loggedin = FALSE;
+            $text = stripslashes($profile['text']);
+
         }
+
+        $avatarsPath = $_SERVER['DOCUMENT_ROOT'] . "/../public/images/avatars/";
+
+        $text = stripslashes(preg_replace('/\s\s+/', ' ', $text));
+
+        $this->view->render('me', 'default', [
+            'loggedin' => true,
+            'signup' => false,
+            'text'=> $text,
+            'appname' => getenv('APP_NAME'),
+            'userString' => 'Хелло',
+            'user'=> $this->user,
+        ]);
+
     }
 
     public function uploadUserImage($request) {
@@ -93,41 +120,6 @@ class ProfileController
 
 
         $this->view->redirect('profile');
-
-    }
-
-
-    public function index()
-    {
-        if (!$this->loggedin) die();
-
-        $profile = queryMysql("SELECT * FROM profiles WHERE user='$this->user'");
-
-
-        if ($profile->num_rows) {
-            $row = $profile->fetch_array(MYSQLI_ASSOC);
-            $text = stripslashes($row['text']);
-        }  else {
-            $text = "";
-        }
-
-        $avatarsPath = $_SERVER['DOCUMENT_ROOT'] . "/../public/images/avatars/";
-
-
-
-
-        $text = stripslashes(preg_replace('/\s\s+/', ' ', $text));
-
-        //showProfile($this->user);
-
-        $this->view->render('me', 'default', [
-            'loggedin' => $this->loggedin,
-            'signup' => false,
-            'text'=> $text,
-            'appname' => getenv('APP_NAME'),
-            'userString' => 'Хелло',
-            'user'=> $this->user,
-        ]);
 
     }
 }

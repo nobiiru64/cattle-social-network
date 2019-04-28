@@ -1,47 +1,67 @@
 <?php
 
-namespace Nobiiru;
+namespace Cattle;
+
+
 
 
 
 class App {
 
-    public $routes;
-    public $loggedin;
+    public static $router;
 
-    public function __construct()
-    {
+    public static $db;
+
+    public static $routes = [];
+
+    public static $loggedin;
+
+    public static function init(){
         session_start();
+        static::bootstrap();
+        self::run();
+    }
+
+    public static function auth(){
+
+
+
         $userstr = ' (Guest)';
         if (isset($_SESSION['user'])) {
-            $this->user = $_SESSION['user'];
-            $this->loggedin = TRUE;
-            $userstr = " ($this->user)";
+            $user = $_SESSION['user'];
+            self::$loggedin = TRUE;
+            $userstr = " ($user)";
         } else {
-            $this->loggedin = false;
+            self::$loggedin = false;
         }
+    }
 
-        $this->routes = [];
+    public static function bootstrap(){
 
+        include '../routes/web.php';
+        $dotenv = (\Dotenv\Dotenv::create(__DIR__.'/..'))->load();
+     //   static::$router = new Cattle\Router();
+        static::$db = new \Cattle\Database();
 
+        self::auth();
     }
 
     public function post($url, $callback) {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
-            $this->routes[$url] = [$callback, 'post'];
+            self::$routes[$url] = [$callback, 'post'];
         }
 
     }
 
     public function get($url, $callback){
         if ($_SERVER['REQUEST_METHOD'] == "GET") {
-            $this->routes[$url] = [$callback, 'get'];
+            self::$routes[$url] = [$callback, 'get'];
 
         }
     }
 
     public function run() {
-        $this->installCheck();
+        self::installCheck();
         $url = explode('/', $_SERVER['REQUEST_URI']);
 
 
@@ -52,7 +72,8 @@ class App {
         }
 
         $id = 0;
-        foreach ($this->routes as $key => $route) {
+
+        foreach ( self::$routes as $key => $route) {
 
 
 
@@ -70,9 +91,9 @@ class App {
                     $controller = $route;
                     if (count($url) > 2 && $url[1] !== 'api') {
                         if (isset($url[2]) && empty($url[2])) {
-                            $controller = $this->routes["/{$url[1]}/"];
+                            $controller = self::$routes["/{$url[1]}/"];
                         } else {
-                            $controller = $this->routes["/{$url[1]}/:user"];
+                            $controller = self::$routes["/{$url[1]}/:user"];
                         }
                     }
 
@@ -111,13 +132,13 @@ class App {
 
         function checkAvailable() {
             $installed = queryWithResponse("SELECT * FROM members LIMIT 1;");
-            if (!$installed) echo 'Не установленно!';
-            if (!$installed) Header('Location: install.php');
+           // if (!$installed) echo 'Не установленно!';
+          //  if (!$installed) Header('Location: install.php');
         }
         function queryWithResponse($query){
             global $connection;
-            $result = $connection->query($query);
-            return ($result) ? true : false;
+          //  $result = $connection->query($query);
+           // return ($result) ? true : false;
         }
 
         checkAvailable();

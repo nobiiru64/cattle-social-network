@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Nobiiru\\": "app/"
+            "Cattle\\": "app/"
         },
         "files": [
             "app/Helpers.php"
