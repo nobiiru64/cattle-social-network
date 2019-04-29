@@ -2,7 +2,7 @@
 
 namespace Cattle\Model;
 
-use Cattle\Database;
+use Cattle\Core\Database;
 use PDO;
 
 class Friends extends Database {
@@ -15,3 +15,4 @@ class Friends extends Database {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+

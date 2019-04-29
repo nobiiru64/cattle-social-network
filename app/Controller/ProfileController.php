@@ -6,7 +6,10 @@ use Cattle\Controller;
 use Cattle\View;
 use Cattle\Model\Profile;
 
-
+/**
+ * Profile Class
+ *
+ */
 class ProfileController
 {
 
@@ -20,39 +23,42 @@ class ProfileController
         $this->view = new View();
         $this->auth = \Cattle\App::auth();
         if ($_SESSION) $this->user = $_SESSION['user'];
-
-        if ($_SESSION['user']) $this->loggedin = TRUE;
-
-
+        if ($_SESSION['user'])
+            $this->loggedin = TRUE;
     }
+
+    /**
+     * Profile index me.php
+     *
+     * @return mixed
+     */
 
     public function index()
     {
         if (!$this->loggedin)
             die();
 
+        $text = "";
+        $profile = Profile::get($this->user);
 
-        if (!$profile = Profile::get($this->user)) {
-            $test = '';
-        } else {
-            $text = stripslashes($profile['text']);
-
-        }
-
-        $avatarsPath = $_SERVER['DOCUMENT_ROOT'] . "/../public/images/avatars/";
-
-        $text = stripslashes(preg_replace('/\s\s+/', ' ', $text));
+        if ($profile)
+            $text = stripslashes(preg_replace('/\s\s+/', ' ', $profile['text']));
 
         $this->view->render('me', 'default', [
-            'loggedin' => true,
-            'signup' => false,
-            'text'=> $text,
+            'loggedin' => $this->loggedin,
             'appname' => getenv('APP_NAME'),
             'userString' => 'Хелло',
+            'text'=> $text,
             'user'=> $this->user,
         ]);
 
     }
+
+    /**
+     * upload image
+     *
+     * @return mixed
+     */
 
     public function uploadUserImage($request) {
 
@@ -65,7 +71,6 @@ class ProfileController
                     $src = imagecreatefromgif($saveto);
                     break;
                 case "image/jpeg":
-                    //Как обычный, так и прогрессивный JPEG-формат
                 case "image/pjpeg":
                     $src = imagecreatefromjpeg($saveto);
                     break;
@@ -76,6 +81,7 @@ class ProfileController
                     $typeok = FALSE;
                     break;
             }
+
             if ($typeok) {
                 list($w, $h) = getimagesize($saveto);
                 $max = 100;
@@ -102,22 +108,21 @@ class ProfileController
         }
     }
 
-    public function changeUserDescription($request){
+    public function changeUserDescription($request) {
 
         if (!$this->loggedin) die();
-
-        $result = queryMysql("SELECT * FROM profiles WHERE user='$this->user'");
+        $text = "";
+        $result = Profile::get($this->user);
 
         if (isset($_POST['text'])) {
-            $text = sanitizeString($_POST['text']);
-            $text = preg_replace('/\s\s+/', ' ', $text);
-            if ($result->num_rows) {
-                queryMysql("UPDATE profiles SET text='$text' where user='$this->user'");
+            $text = \Cattle\Core\Database::sanitazeString($_POST['text']);
+            $text = preg_replace('/\s\s+/', ' ', $_POST['text']);
+            if ($result) {
+                Profile::update($this->user, $text);
             } else {
-                queryMysql("INSERT INTO profiles VALUES('$this->user', '$text')");
+                Profile::create($this->user, $text);
             }
         }
-
 
         $this->view->redirect('profile');
 

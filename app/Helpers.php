@@ -38,3 +38,20 @@ if (!function_exists('destroySession')) {
         session_destroy();
     }
 }
+
+
+/*
+
+function showProfile($user) {
+    if (file_exists("$user.jpg"))
+        echo "<img src='$user.jpg align='left'>";
+
+    $result = queryMysql("SELECT * FROM profiles WHERE user='$user'");
+
+    if ($result->num_rows){
+        $row = $result->fetch_assoc();
+        echo stripslashes($row['text']) .
+            "<br style='clear:left;'><br>";
+    }
+}
+*/

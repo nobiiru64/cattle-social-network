@@ -1,29 +1,45 @@
 <?php
-namespace Nobiiru\Parser;
+
+namespace Cattle\Core;
 
 use PDO;
-use App\Config;
-/**
- * Base model
- *
- * PHP version 7.0
- */
-abstract class Model
-{
-    /**
-     * Get the PDO database connection
-     *
-     * @return mixed
-     */
+
+class Database {
+
+    public $db;
+
     protected static function getDB()
     {
+
+        $settings = self::getPDOSettings();
+
         static $db = null;
         if ($db === null) {
-            $dsn = 'mysql:host=' . Config::DB_HOST . ';dbname=' . Config::DB_NAME . ';charset=utf8';
-            $db = new PDO($dsn, Config::DB_USER, Config::DB_PASSWORD);
+
+            $db = new PDO($settings['dsn'], $settings['user'], $settings['pass']);
             // Throw an Exception when an error occurs
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $db->query('SET NAMES utf8');
         }
         return $db;
     }
+
+    public static function sanitazeString($var){
+        $db = self::getDB();
+        $var = strip_tags($var);
+        $var = htmlentities($var);
+        $var = stripslashes($var);
+        return $db->quote($var);
+    }
+
+
+   private static function getPDOSettings(){
+
+       $config = include dirname(__FILE__)."/../Config.php";
+       $result['dsn'] = "{$config['type']}:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
+       $result['user'] = $config['user'];
+       $result['pass'] = $config['pass'];
+       return $result;
+
+   }
 }

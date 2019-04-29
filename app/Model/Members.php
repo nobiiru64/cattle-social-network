@@ -2,7 +2,7 @@
 
 namespace Cattle\Model;
 
-use Cattle\Database;
+use Cattle\Core\Database;
 use PDO;
 
 class Members extends Database {
@@ -31,9 +31,7 @@ class Members extends Database {
 
     }
 
-    public function auth($user , $pass) {
-
-
+    public function auth($user, $pass) {
 
         $db = static::getDB();
         $result = $db->query("SELECT user,pass FROM members WHERE user='{$user}' AND pass='{$pass}'");

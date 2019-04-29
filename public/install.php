@@ -2,7 +2,6 @@
 require_once '../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::create(__DIR__.'/..');
 $dotenv->load();
-require_once '../app/functions.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,7 +16,25 @@ require_once '../app/functions.php';
     </form>
     <br><br>
 <?php
+
+
 if (isset($_POST['install']) && $_SERVER['REQUEST_METHOD'] == "POST") {
+
+    $connection = mysqli_connect("127.0.0.1", "root", "123123", "sv_social");
+
+    function createTable($name, $query){
+        queryMysql("CREATE TABLE IF NOT EXISTS $name($query)");
+        echo "Таблица '$name' создана или уже существовала<br>";
+    }
+
+    function queryMysql($query){
+        global $connection;
+        $result = $connection->query($query);
+        if (!$result) die($connection->error);
+        return $result;
+    }
+
+
      createTable('members',
          'user VARCHAR(16), 
                 pass VARCHAR(16),

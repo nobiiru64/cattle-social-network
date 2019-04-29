@@ -2,9 +2,7 @@
 
 namespace Cattle;
 
-
-
-
+use Cattle\Core;
 
 class App {
 
@@ -23,9 +21,6 @@ class App {
     }
 
     public static function auth(){
-
-
-
         $userstr = ' (Guest)';
         if (isset($_SESSION['user'])) {
             $user = $_SESSION['user'];
@@ -41,7 +36,7 @@ class App {
         include '../routes/web.php';
         $dotenv = (\Dotenv\Dotenv::create(__DIR__.'/..'))->load();
      //   static::$router = new Cattle\Router();
-        static::$db = new \Cattle\Database();
+        static::$db = new \Cattle\Core\Database();
 
         self::auth();
     }
@@ -56,7 +51,6 @@ class App {
     public function get($url, $callback){
         if ($_SERVER['REQUEST_METHOD'] == "GET") {
             self::$routes[$url] = [$callback, 'get'];
-
         }
     }
 
@@ -74,9 +68,6 @@ class App {
         $id = 0;
 
         foreach ( self::$routes as $key => $route) {
-
-
-
 
             $RouteUrl = $key;
             $routeNew = explode('/', $RouteUrl);
@@ -132,7 +123,7 @@ class App {
 
         function checkAvailable() {
             $installed = queryWithResponse("SELECT * FROM members LIMIT 1;");
-           // if (!$installed) echo 'Не установленно!';
+         //   if (!$installed) echo 'Не установленно!';
           //  if (!$installed) Header('Location: install.php');
         }
         function queryWithResponse($query){

@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <form method="POST" action="/api/avatar/" enctype="multipart/form-data">
+        <form method="POST" action="/api/text/" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12">
                     <label for="text"></label>
