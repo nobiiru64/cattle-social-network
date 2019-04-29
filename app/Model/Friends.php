@@ -7,12 +7,17 @@ use PDO;
 
 class Friends extends Database {
 
-    public static function getAll(){
-
+    public static function getFollowers($user) {
         $db = static::getDB();
-
-        $stmt = $db->query('SELECT * FROM friends');
+        $stmt = $db->query("SELECT * FROM friends WHERE user='{$user}'");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getFollowing($user) {
+        $db = static::getDB();
+        $stmt = $db->query("SELECT * FROM friends WHERE user='{$user}'");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     }
 }
 

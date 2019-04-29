@@ -54,7 +54,7 @@
                     </a>
                     <div class="dropdown-menu" style="left: -1vw;" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/profile">Профиль</a>
-                        <a class="dropdown-item" href="#">Лента</a>
+                        <a class="dropdown-item" href="/feed">Лента</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/logout">Выйти</a>
                     </div>

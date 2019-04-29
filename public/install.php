@@ -40,6 +40,15 @@ if (isset($_POST['install']) && $_SERVER['REQUEST_METHOD'] == "POST") {
                 pass VARCHAR(16),
                  INDEX(user(6))'
      );
+
+    createTable('feed',
+        'id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+                user VARCHAR(16),
+                message VARCHAR(255),
+                created_at datetime
+                '
+
+            );
      createTable('messages',
          'id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
                  auth VARCHAR(16),

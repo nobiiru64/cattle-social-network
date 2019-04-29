@@ -4,6 +4,7 @@ namespace Cattle\Controller;
 
 use Cattle\View;
 use Cattle\Model\Members;
+use Cattle\Model\Feed;
 
 
 class MainController {
@@ -30,11 +31,25 @@ class MainController {
         ]);
     }
 
+    public function addFeedMessage(){
+
+        if (isset($_POST['message'])){
+            $text = $_POST['message'];
+            $messageAdded = Feed::add($this->user, $text);
+            if ($messageAdded) echo 'success';
+        }
+
+        echo '123';
+    }
+
     public function index() {
+
+        $feed = Feed::getAll();
 
         $this->view->render('index', 'default',[
             'loggedin' => \Cattle\App::$loggedin,
             'signup' => false,
+            'feed' => $feed,
             'appname' => getenv('APP_NAME'),
             'userString' => 'Хелло',
             'user'=> $this->user

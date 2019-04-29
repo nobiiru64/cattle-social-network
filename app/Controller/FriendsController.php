@@ -1,8 +1,9 @@
 <?php
 
-namespace Nobiiru\Controller;
+namespace Cattle\Controller;
 
-use Nobiiru\View;
+use Cattle\Model\Friends;
+use Cattle\View;
 
 class FriendsController
 {
@@ -14,25 +15,22 @@ class FriendsController
     public function __construct()
     {
         $this->view = new View();
-
-        $userstr = ' (Guest)';
-        if (isset($_SESSION['user'])) {
-            $this->user = $_SESSION['user'];
+        $this->auth = \Cattle\App::auth();
+        if ($_SESSION) $this->user = $_SESSION['user'];
+        if ($_SESSION['user'])
             $this->loggedin = TRUE;
-            $userstr = " ($this->user)";
-        } else {
-            $this->loggedin = FALSE;
-        }
     }
 
     public function index()
     {
         if (!$this->loggedin) die();
 
+        $view = $this->user;
+
         if (isset($_GET['view'])) {
             $view = sanitizeString($_GET['view']);
         } else {
-            $view = $this->user;
+
         }
 
         if ($view == $this->user) {
@@ -47,19 +45,21 @@ class FriendsController
 
         $followers = [];
         $following = [];
-        $result = queryMysql("SELECT * FROM friends WHERE user='$view'");
-        $num = $result->num_rows;
-
+        $result = Friends::getFollowers($view);
+        $num = count($result);
+        $i=0;
         for ($j = 0; $j < $num; ++$j) {
-            $row = $result->fetch_array(MYSQLI_ASSOC);
+            $i++;
+            $row = $result[$i];
             $followers[$j] = $row['friend'];
         }
 
-        $result = queryMysql("SELECT * FROM friends WHERE friend='$view'");
-        $num = $result->num_rows;
-
+        $result = Friends::getFollowing($view);
+        $num = count($result);
+        $i=0;
         for ($j = 0; $j < $num; ++$j) {
-            $row = $result->fetch_array(MYSQLI_ASSOC);
+            $i++;
+            $row = $result[$i];
             $following[$j] = $row['user'];
         }
 
@@ -68,6 +68,7 @@ class FriendsController
         $following = array_diff($following, $mutual);
 
         $friends = false;
+
         if (sizeof($mutual) || sizeof($followers) || sizeof($following)) {
             $friends = true;
         }

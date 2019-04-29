@@ -1,11 +1,12 @@
 <?php
 
-namespace Nobiiru\Controller;
+namespace Cattle\Controller;
 
-use Nobiiru\View;
+use Cattle\Model\Users;
+use Cattle\View;
 
 
-class MembersController
+class UsersController
 {
 
     public $view;
@@ -16,14 +17,12 @@ class MembersController
     {
         $this->view = new View();
 
-        $userstr = ' (Guest)';
-        if (isset($_SESSION['user'])) {
-            $this->user = $_SESSION['user'];
+        $this->auth = \Cattle\App::auth();
+        if ($_SESSION) $this->user = $_SESSION['user'];
+        if ($_SESSION['user'])
             $this->loggedin = TRUE;
-            $userstr = " ($this->user)";
-        } else {
-            $this->loggedin = FALSE;
-        }
+
+
     }
 
 
@@ -32,23 +31,21 @@ class MembersController
 
         $users = [];
 
-        $result = queryMysql("SELECT user FROM members ORDER BY user");
-        $num = $result->num_rows;
-
+        $result = Users::getAll();
+        $num = count($result);
+        $i = 0;
         for ($j = 0; $j < $num; ++$j) {
-
-            $row = $result->fetch_array(MYSQLI_ASSOC);
+            $i++;
+            $row = $result[$i-1];
 
 
             if ($row['user'] == $this->user)
                 continue;
 
-
-
-            $result1 = queryMysql("SELECT * FROM friends WHERE user='" . $row['user'] . "' AND friend='$this->user'");
-            $t1 = $result1->num_rows;
-            $result1 = queryMysql("SELECT * FROM friends WHERE user='$this->user' AND friend='" . $row['user'] . "'");
-            $t2 = $result1->num_rows;
+            $result1 = Users::followed($this->user, $row['user']);
+            $t1 = count($result1);
+            $result1 = Users::following($this->user, $row['user']);
+            $t2 = count($result1);
 
             $status = '';
             if (($t1 + $t2) > 1) $status = " &harr; is a mutual friend";
@@ -63,14 +60,15 @@ class MembersController
             $member = $row['user'];
 
             $users[$member] = $status;
-
-            // Стрелка вправо, проявляет интерес к дружбе с вами
-            if (!$t1) {
-           //     echo " [<a href='members.php?add=" . $row['user'] . "'>$follow</a>]";
+            /*
+             Стрелка вправо, проявляет интерес к дружбе с вами
+             if (!$t1) {
+                echo " [<a href='members.php?add=" . $row['user'] . "'>$follow</a>]";
             } else {
-           //     echo " [<a href='members.php?remove=" .$row['user'] . "'>drop</a>]";
+               echo " [<a href='members.php?remove=" .$row['user'] . "'>drop</a>]";
             }
-            // Снять заинтересованность в дружбе
+             Снять заинтересованность в дружбе
+            */
         }
 
         $this->view->render('users', 'default',[
@@ -89,8 +87,8 @@ class MembersController
         $url = $_SERVER['REQUEST_URI'];
         $url = str_replace('/remove/', '', $url);
 
-        $remove = sanitizeString($url);
-        queryMysql("DELETE FROM friends WHERE user='$url' AND friend='$this->user'");
+       // $remove = sanitizeString($url);
+        Users::removeFriend($url,$this->user);
 
         $this->view->redirect('users');
 
@@ -101,30 +99,29 @@ class MembersController
         $url = $_SERVER['REQUEST_URI'];
         $url = str_replace('/add/', '', $url);
 
-        $add = sanitizeString($url);
-        $result = queryMysql("SELECT * FROM friends WHERE user='$add' AND friend='$this->user'");
+       // $friend = \Cattle\Core\Database::sanitazeString($url);
+        $result = Users::isFriends($this->user, $url);
 
-        if (!$result->num_rows)
-            queryMysql("INSERT INTO friends VALUES ('$add', '$this->user')");
+
+        if (!count($result))
+            Users::addFriend($this->user, $url);
 
         $this->view->redirect('users');
     }
 
     public function showProfile(){
 
-
-
         $url = $_SERVER['REQUEST_URI'];
         $url = str_replace('/id/', '', $url);
 
-        $result = queryMysql("SELECT * FROM profiles WHERE user='{$url}'");
+        $result = Users::show($url);
 
-        if ($result->num_rows) {
+        $num = count($result);
 
-                $row = $result->fetch_assoc();
+        if ($num) {
+
+                $row = reset($result);
                 $text = stripslashes($row['text']);
-
-
 
             $avatarsPath = $_SERVER['DOCUMENT_ROOT'] . "/../public/images/avatars/";
             $imageLink = $avatarsPath . $url . ".jpg";
