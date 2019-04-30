@@ -2,7 +2,7 @@
     <h3 class="text-center">Ваш профиль</h3>
     <div class="row text-center">
         <div class="col-12">
-            <img class="avatar" src="<?= getUserAvatar() .'?' . rand(0,100) ?>">
+            <img class="avatar" src="<?= getUserAvatar() .'?' . rand(0,10000) ?>">
             <p class="pt-3"><?= $user ?></p>
         </div>
         <div class="col-12">

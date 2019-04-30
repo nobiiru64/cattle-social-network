@@ -18,7 +18,7 @@ $(document).ready(function(){
             {
                 console.log(data);
                 if (data) {
-                    window.location = '/';
+                   window.location = '/';
                 }
                 else {
                     alert('Invalid Credentials');

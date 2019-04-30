@@ -7,7 +7,7 @@
             <? foreach($mutual as $user): ?>
             <a href="/id/<?= $user ?>">
                 <div class="media text-muted pt-3 border-bottom">
-                    <img src="<?= getAvatar($user) ?>" class="bd-placeholder-img mr-2 rounded" width="32"height="32">
+                    <img src="<?= getAvatar($user)  .'?' . rand(0,10000) ?>" class="bd-placeholder-img mr-2 rounded" width="32"height="32">
                     <div><strong class="d-block text-dark text-gray-dark">@<?= $user ?></strong></div>
                 </div>
             </a>
@@ -18,7 +18,7 @@
             <? foreach($followers as $user): ?>
                 <a href="/id/<?= $user ?>">
                     <div class="media text-muted pt-3 border-bottom">
-                        <img src="<?= getAvatar($user) ?>" class="bd-placeholder-img mr-2 rounded" width="32"height="32">
+                        <img src="<?= getAvatar($user) .'?' .rand(0,10000)?>" class="bd-placeholder-img mr-2 rounded" width="32"height="32">
                         <div><strong class="d-block text-dark text-gray-dark">@<?= $user ?></strong></div>
                     </div>
                 </a>
@@ -29,7 +29,7 @@
             <? foreach($following as $user): ?>
             <a href="/id/<?= $user ?>">
                 <div class="media text-muted pt-3 border-bottom">
-                    <img src="<?= getAvatar($user) ?>" class="bd-placeholder-img mr-2 rounded" width="32"height="32">
+                    <img src="<?= getAvatar($user)  .'?' . rand(0,10000)?>" class="bd-placeholder-img mr-2 rounded" width="32"height="32">
                     <div><strong class="d-block text-dark text-gray-dark">@<?= $user ?></strong></div>
                 </div>
             </a>

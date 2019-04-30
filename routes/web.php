@@ -31,5 +31,6 @@ App::get('/logout','\Cattle\Controller\MainController@logout');
 App::post('/api/text','\Cattle\Controller\ProfileController@changeUserDescription');
 App::post('/api/avatar','\Cattle\Controller\ProfileController@uploadUserImage');
 App::post('/api/feedadd','\Cattle\Controller\MainController@addFeedMessage');
+App::post('/api/feedremove','\Cattle\Controller\MainController@removeFeedMessage');
 
 

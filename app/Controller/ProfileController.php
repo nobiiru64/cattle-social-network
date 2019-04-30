@@ -84,21 +84,34 @@ class ProfileController
 
             if ($typeok) {
                 list($w, $h) = getimagesize($saveto);
-                $max = 100;
-                $tw = $w;
-                $th = $h;
-                if ($w > $h && $max < $w) {
-                    $th = $max / $w * $h;
-                    $tw = $max;
-                } elseif ($h > $w && $max < $h) {
-                    $tw = $max / $h * $w;
-                    $th = $max;
-                } elseif ($max < $w) {
-                    $tw = $th = $max;
+                $ratio = $w / $h;
+
+                $targetWidth = $targetHeight = min(100, max($w, $h));
+
+                if ($ratio < 1) {
+                    $targetWidth = $targetHeight * $ratio;
+                } else {
+                    $targetHeight = $targetWidth / $ratio;
                 }
-                $tmp = imagecreatetruecolor($tw, $th);
-                imagecopyresampled($tmp, $src, 0, 0, 0, 0, $tw, $th, $w, $h);
-                //imageconvolution($tmp, array(array(–1, –1, –1),array(–1, 16, –1), array(–1, –1, –1)), 8, 0);
+
+                $srcWidth = $w;
+                $srcHeight = $h;
+                $srcX = $srcY = 0;
+
+                $targetWidth = $targetHeight = min($w, $h, 100);
+
+                if ($ratio < 1) {
+                    $srcX = 0;
+                    $srcY = ($w / 2) - ($h / 2);
+                    $srcWidth = $srcHeight = $w;
+                } else {
+                    $srcY = 0;
+                    $srcX = ($w / 2) - ($h / 2);
+                    $srcWidth = $srcHeight = $h;
+                }
+
+                $tmp = imagecreatetruecolor($targetWidth, $targetHeight);
+                imagecopyresampled($tmp, $src, 0, 0, $srcX, $srcY, $targetWidth, $targetHeight, $srcWidth, $srcHeight);
                 imagejpeg($tmp, $saveto);
                 imagedestroy($tmp);
                 imagedestroy($src);

@@ -2,7 +2,7 @@
 
     <? if ($member): ?>
         <div class="row text-center pb-5">
-            <div class="col-3"><img class="avatar" src="<?= getAvatar($member) .'?' . rand(0,100) ?>">
+            <div class="col-3"><img class="avatar" src="<?= getAvatar($member) .'?' . rand(0,10000) ?>">
             <p class="pt-3"><?= ($member) ?></p></div>
             <div class="col-6"><?= $member_text ?></div>
         </div>

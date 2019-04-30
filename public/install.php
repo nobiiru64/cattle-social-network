@@ -36,7 +36,8 @@ if (isset($_POST['install']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 
 
      createTable('members',
-         'user VARCHAR(16), 
+         'id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+         user VARCHAR(16), 
                 pass VARCHAR(16),
                  INDEX(user(6))'
      );

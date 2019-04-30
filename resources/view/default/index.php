@@ -30,19 +30,24 @@
             <div class="align-items-center flex-column d-flex justify-content-center">
             <?php foreach ($feed as $item): $item = (object) $item; ?>
 
-                <div class="col-6 pb-4">
-                    <div class="card" style="height: 80px">
+                <div class="col-6 pb-4 message" data-id="<?= $item->id ?>">
+                    <div class="card <? if ($item->user == $this->user) echo 'my-message'; ?>"style="height: 100px">
                         <div class="row">
-                            <div class="user col-2 pt-3">
-                                <img src="<?= getAvatar($item->user) ?>" class="avatar-40">
-
+                            <div class="user col-2 pt-3 pl-4">
+                                <img src="<?= getAvatar($item->user)  .'?' .rand(0,10000)?>" class="avatar-60">
                             </div>
-                            <div class="message col-10 pt-3">
+                            <div class="col-8 pt-4">
                                 <div class="d-flex flex-column align-items-start">
                                     <div>@<?= $item->user ?> <?= date("y.m.d h:i",strtotime($item->created_at));  ?></div>
                                     <div><?= $item->message ?></div>
                                 </div>
-
+                            </div>
+                            <div class="col-2 pt-2 pr-4">
+                                <? if ($item->user == $this->user): ?>
+                                    <button type="button" data-id="<?= $item->id ?>" class="close" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                <? endif; ?>
                             </div>
                         </div>
                     </div>

@@ -26,7 +26,7 @@ class Members extends Database {
     public function create($user, $pass) {
 
         $db = static::getDB();
-        $result = $db->query("INSERT INTO members VALUES('{$user}','{$pass}')");
+        $result = $db->query("INSERT INTO members VALUES('','{$user}','{$pass}')");
         return $result;
 
     }

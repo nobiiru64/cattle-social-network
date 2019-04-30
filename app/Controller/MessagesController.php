@@ -30,9 +30,6 @@ class MessagesController
             $view = $this->loggedin;
         }
 
-
-
-
         if ($view != "") {
             if ($view == $this->user) {
                 $name1 = $name2 = "Your"; // Ваши

@@ -29,8 +29,21 @@ $(document).ready(function(){
                 }
             }
         });
+    })
 
+    $('.close').on('click', function(e){
+        e.preventDefault();
+            var $id = $(this).attr('data-id');
+            $('.message[data-id='+ $id + ']').remove();
+
+            $.ajax({
+                type: "POST",
+                url: "/api/feedremove/",
+                data: {
+                    'id': $id,
+                },
+            });
 
 
     })
-})
+});

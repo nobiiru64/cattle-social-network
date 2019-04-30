@@ -15,6 +15,7 @@ class FriendsController
     public function __construct()
     {
         $this->view = new View();
+
         $this->auth = \Cattle\App::auth();
         if ($_SESSION) $this->user = $_SESSION['user'];
         if ($_SESSION['user'])
@@ -25,12 +26,10 @@ class FriendsController
     {
         if (!$this->loggedin) die();
 
-        $view = $this->user;
-
         if (isset($_GET['view'])) {
             $view = sanitizeString($_GET['view']);
         } else {
-
+            $view = $this->user;
         }
 
         if ($view == $this->user) {
@@ -45,30 +44,18 @@ class FriendsController
 
         $followers = [];
         $following = [];
-        $result = Friends::getFollowers($view);
-        $num = count($result);
-        $i=0;
-        for ($j = 0; $j < $num; ++$j) {
-            $i++;
-            $row = $result[$i];
-            $followers[$j] = $row['friend'];
-        }
 
-        $result = Friends::getFollowing($view);
-        $num = count($result);
-        $i=0;
-        for ($j = 0; $j < $num; ++$j) {
-            $i++;
-            $row = $result[$i];
-            $following[$j] = $row['user'];
-        }
+        foreach (Friends::getFollowers($view) as $follower)
+            $followers[] = $follower['friend'];
+
+        foreach (Friends::getFollowing($view) as $followed)
+            $following[] = $followed['friend'];
 
         $mutual = array_intersect($followers, $following);
         $followers = array_diff($followers, $mutual);
         $following = array_diff($following, $mutual);
 
         $friends = false;
-
         if (sizeof($mutual) || sizeof($followers) || sizeof($following)) {
             $friends = true;
         }

@@ -44,7 +44,7 @@
     <? if ($loggedin): ?>
         <div class="form-inline my-2 my-lg-0">
             <div class="pr-2">
-                <img class="avatar-40" src="<?= getUserAvatar() .'?' . rand(0,100) ?>">
+                <img class="avatar-40" src="<?= getUserAvatar() .'?' . rand(0,100000) ?>">
             </div>
 
             <ul class="navbar-nav mr-auto">

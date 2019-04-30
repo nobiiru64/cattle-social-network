@@ -31,6 +31,14 @@ class MainController {
         ]);
     }
 
+    public function removeFeedMessage(){
+        if (isset($_POST['id'])) {
+            $id = $_POST['id'];
+            $messageRemoved = Feed::delete($this->user, $id);
+            if ($messageRemoved) echo 'success';
+        }
+    }
+
     public function addFeedMessage(){
 
         if (isset($_POST['message'])){
